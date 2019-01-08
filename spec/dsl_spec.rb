@@ -20,6 +20,19 @@ resource "Order" do
     its([:document]) { should be_truthy }
   end
 
+  describe "locally supplying a request body formatter option" do
+    subject { |example| example.metadata }
+
+    its([:request_body_formatter]) { should be_nil }
+
+    [:post, :get, :put, :delete, :head, :patch].each do |http_method|
+      send(http_method, "/path") do
+        request_body_formatter :json
+        its([:request_body_formatter]) { should eq(:json) }
+      end
+    end
+  end
+
   describe "example context" do
     it "should provide a client" do
       expect(client).to be_a(RspecApiDocumentation::RackTestClient)

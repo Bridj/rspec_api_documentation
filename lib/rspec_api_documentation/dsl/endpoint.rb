@@ -47,7 +47,8 @@ module RspecApiDocumentation::DSL
         if respond_to?(:raw_post)
           params_or_body = raw_post
         else
-          formatter = RspecApiDocumentation.configuration.request_body_formatter
+          formatter = example.metadata[:request_body_formatter] ||
+                      RspecApiDocumentation.configuration.request_body_formatter
           case formatter
           when :json
             params_or_body = params.empty? ? nil : params.to_json
@@ -75,6 +76,10 @@ module RspecApiDocumentation::DSL
     def header(name, value)
       example.metadata[:headers] ||= {}
       example.metadata[:headers][name] = value
+    end
+
+    def request_body_formatter(formatter)
+      example.metadata[:request_body_formatter] = formatter
     end
 
     def authentication(type, value, opts = {})

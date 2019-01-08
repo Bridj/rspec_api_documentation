@@ -70,6 +70,10 @@ module RspecApiDocumentation::DSL
         headers[name] = value
       end
 
+      def request_body_formatter(formatter)
+        safe_metadata(:request_body_formatter, formatter)
+      end
+
       def authentication(type, value, opts = {})
         name, new_opts =
           case type
